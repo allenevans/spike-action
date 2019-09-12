@@ -1,3 +1,5 @@
-# Docker github action spike
+# Container github action spike
 
-A docker based github action for experimenting with github actions
+A container based github action for experimenting with github actions.
+
+Based on [container toolkit template](https://github.com/actions/container-toolkit-template).
