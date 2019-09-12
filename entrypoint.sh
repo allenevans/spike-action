@@ -4,4 +4,8 @@ pwd
 
 ls
 
-echo "hello $1"
+cat README.md
+
+echo echo "hello $1" >> README.md
+
+git status
