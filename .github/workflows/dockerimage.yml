@@ -9,9 +9,13 @@ jobs:
     steps:
     - uses: actions/checkout@v1
 
+    - name: Set environment variables
+      run: |
+        echo "TAG=spike-action:$(date +%s)" > props
+
     - name: Build the Docker image
       run: |
-        export TAG="spike-action:$(date +%s)"
+        export $(cat props | xargs)
         printenv
         docker build . --file Dockerfile --tag $TAG
 
