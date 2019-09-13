@@ -11,6 +11,7 @@ jobs:
 
     - name: Build the Docker image
       run: |
+        export TAG="spike-action:$(date +%s)"
         printenv
         docker build . --file Dockerfile --tag $TAG
 
