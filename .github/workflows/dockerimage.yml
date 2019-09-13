@@ -11,14 +11,14 @@ jobs:
     steps:
     - uses: actions/checkout@v1
       env:
-        TAG: spike-action:$(date +%s)
+        TAG: ${{ spike-action:$(date +%s) }}
 
     - name: Build the Docker image
       run: |
-        echo "TAG=$TAG"
+        printenv
         docker build . --file Dockerfile --tag $TAG
 
     - name: Test
       run: |
-        echo "TAG=$TAG"
+        printenv
         docker run $TAG
