@@ -5,10 +5,17 @@ on: [push]
 jobs:
 
   build:
- 
+
     runs-on: ubuntu-latest
- 
+
     steps:
     - uses: actions/checkout@v1
+
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag spike-action:$(date +%s)
+      run: |
+        export TAG="spike-action:$(date +%s)"
+        docker build . --file Dockerfile --tag $TAG
+
+    - name: Test
+      run: |
+        docker run $TAG
