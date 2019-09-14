@@ -20,6 +20,7 @@ jobs:
         docker build . --file Dockerfile --tag $TAG
 
     - name: Test
+      uses: actions/setup-node@v1
       run: |
         export $(cat props | xargs)
         printenv
