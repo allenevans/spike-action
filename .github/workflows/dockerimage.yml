@@ -19,8 +19,12 @@ jobs:
         printenv
         docker build . --file Dockerfile --tag $TAG
 
-    - name: Test
+    - name: Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+
+    - name: Test
       run: |
         export $(cat props | xargs)
         printenv
