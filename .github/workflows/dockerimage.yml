@@ -19,7 +19,7 @@ jobs:
         printenv
         docker build . --file Dockerfile --tag $TAG
 
-    - name: Node.js ${{ matrix.node-version }}
+    - name: Node.js 10.x
       uses: actions/setup-node@v1
       with:
         node-version: 10.x
