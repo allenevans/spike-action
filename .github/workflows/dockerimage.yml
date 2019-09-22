@@ -12,8 +12,7 @@ jobs:
     - name: set env
       uses: allenevans/set-env@v1.0.0
       with:
-        MY_ENV_VAR: 'my value'
-        ANOTHER_ENV_VAR: 'my value 2'
+        GITHUB_ACTOR: 'bob'
 
     - name: Printenv
       run: |
