@@ -1,6 +1,6 @@
 name: Docker Image CI
 
-on: [push, pull_request]
+on: [pull_request]
 
 jobs:
   build:
@@ -12,9 +12,20 @@ jobs:
     - name: set env
       uses: allenevans/set-env@v1.0.0
       with:
-        MY_ENV_VAR: 'my value'
-        ANOTHER_ENV_VAR: 'my value 2'
-        CHROME_BIN: 'dont replace'
+        overwrite: true
+        yaml: |
+          command: Gist.create
+          args:
+            - description: Hello World Examples
+              public: false
+              files:
+                hello_world.js:
+                  content: config.log('hello world')
+
+    - name: github api
+      uses: allenevans/github-api@9d579970bce31dfb0d843e871761432f396ac276
+      with:
+        command: Gist.create
 
     - name: Printenv
       run: |
