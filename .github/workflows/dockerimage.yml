@@ -9,23 +9,28 @@ jobs:
     steps:
     - uses: actions/checkout@v1
 
-    - name: set env
-      uses: allenevans/set-env@v1.0.0
-      with:
-        overwrite: true
-        yaml: |
-          command: Gist.create
-          args:
-            - description: Hello World Examples
-              public: false
-              files:
-                hello_world.js:
-                  content: config.log('hello world')
-
     - name: github api
-      uses: allenevans/github-api@9d579970bce31dfb0d843e871761432f396ac276
+      uses: allenevans/github-api@dist/artifacts-1
+      id: branch
       with:
-        command: Gist.create
+        token: ${{secrets.GH_ACTION_TOKEN}}
+        yaml: |
+          command: Repository.getBranch
+          repo: allenevans/pages-ci
+          args:
+            - master
+
+    - name: Branch info
+      run: |
+        echo "${{steps.branch.outputs.result}}"
+        echo "branch: ${{steps.branch.outputs.name}}"
+        echo "sha: ${{steps.branch.outputs.commit.sha}}"
+        echo ".."
+
+    - name: Dump steps context
+      env:
+        STEPS_CONTEXT: ${{ toJson(steps) }}
+      run: echo "$STEPS_CONTEXT"
 
     - name: Printenv
       run: |
@@ -41,11 +46,6 @@ jobs:
       env:
         JOB_CONTEXT: ${{ toJson(job) }}
       run: echo "$JOB_CONTEXT"
-
-    - name: Dump steps context
-      env:
-        STEPS_CONTEXT: ${{ toJson(steps) }}
-      run: echo "$STEPS_CONTEXT"
 
     - name: Dump runner context
       env:
