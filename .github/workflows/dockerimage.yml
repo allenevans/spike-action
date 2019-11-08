@@ -14,11 +14,9 @@ jobs:
       id: branch
       with:
         token: ${{secrets.GH_ACTION_TOKEN}}
-        yaml: |
-          command: Repository.getBranch
-          repo: allenevans/pages-ci
-          args:
-            - master
+        command: Repository.getBranch
+        repo: allenevans/set-env
+        args: master
 
     - name: Branch info
       run: |
@@ -26,6 +24,36 @@ jobs:
         echo "branch: ${{steps.branch.outputs.name}}"
         echo "sha: ${{steps.branch.outputs.commit.sha}}"
         echo ".."
+
+    - name: get gist
+      uses: allenevans/github-api@dist/artifacts-1
+      id: get_gist
+      with:
+        token: ${{secrets.GH_ACTION_TOKEN}}
+        command: Gist.read
+        id: 6b48964ef7b09214a0953bc3e0d30891
+
+    - name: delete gist
+      uses: allenevans/github-api@dist/artifacts-1
+      id: delete_gist
+      with:
+        token: ${{secrets.GH_ACTION_TOKEN}}
+        command: Gist.delete
+        id: 6b48964ef7b09214a0953bc3e0d30891
+
+    - name: create gist
+      uses: allenevans/github-api@dist/artifacts-1
+      id: create_gist
+      with:
+        token: ${{secrets.GH_ACTION_TOKEN}}
+        command: Gist.create
+        args: |
+          - description: Hello World Examples
+            public: false
+            files:
+              hello_world.js:
+                content: config.log('hello world')
+        select: ".data"
 
     - name: Dump steps context
       env:
