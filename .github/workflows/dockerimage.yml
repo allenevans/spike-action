@@ -60,6 +60,9 @@ jobs:
         STEPS_CONTEXT: ${{ toJson(steps) }}
       run: echo "$STEPS_CONTEXT"
 
+    - name: Set env
+      run: echo "::set-env name=action_state::yellow"
+
     - name: Printenv
       run: |
         echo "MY_ENV_VAR=${MY_ENV_VAR}"
