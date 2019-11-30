@@ -12,6 +12,13 @@ jobs:
     - name: Set env
       run: echo "::set-env name=action_state::yellow"
 
+    - name: propsfile
+      run: |
+        echo TEST_VAR1=123 > propsfile;
+        echo TEST_VAR2=abc >> propsfile;
+        export $(cat propsfile | xargs);
+        printenv | grep TEST_VAR
+
     - name: Printenv
       run: |
         echo "MY_ENV_VAR=${MY_ENV_VAR}"
