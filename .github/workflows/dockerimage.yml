@@ -16,7 +16,7 @@ jobs:
       run: printenv | grep ACTION_STATE
 
     - name: overwrite ACTION_STATE
-      uses: allenevans/set-env@v1.0.0
+      uses: allenevans/set-env@5a48f138d9ee6a059fc5303298b62528f28e403e
       with:
         ACTION_STATE: 'red'
 
