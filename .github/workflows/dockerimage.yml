@@ -30,6 +30,39 @@ jobs:
         export $(cat propsfile | xargs);
         printenv | grep TEST_VAR
 
+    - name: Set SHORT_SHA
+      uses: allenevans/short-sha@252b1691e10c6410d18de72f135cf2adfe39b9fb
+
+    - name: Set SHORT_SHA_2
+      uses: allenevans/short-sha@252b1691e10c6410d18de72f135cf2adfe39b9fb
+      with:
+        sha: ${{ github.event.pull_request.head.sha }}
+        name: SHORT_SHA_2
+
+    - name: Set SHORT_SHA_3
+      uses: allenevans/short-sha@252b1691e10c6410d18de72f135cf2adfe39b9fb
+      with:
+        sha: ${{ github.event.pull_request.head.sha }}
+        name: SHORT_SHA_3
+
+    - name: Set SHORT_SHA_4
+      uses: allenevans/short-sha@252b1691e10c6410d18de72f135cf2adfe39b9fb
+      with:
+        offset: -7
+        name: SHORT_SHA_4
+
+    - name: Set SHORT_SHA_CAPS
+      uses: allenevans/short-sha@252b1691e10c6410d18de72f135cf2adfe39b9fb
+      with:
+        SHA: ${{ github.event.pull_request.head.sha }}
+        NAME: SHORT_SHA_CAPS
+        OFFSET: -24
+        LENGTH: 8
+
+    - name: Print short sha
+      run: |
+        echo "Short sha is {SHA7}"
+
     - name: Printenv
       run: |
         echo "MY_ENV_VAR=${MY_ENV_VAR}"
