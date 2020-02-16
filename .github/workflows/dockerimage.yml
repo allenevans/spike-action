@@ -1,6 +1,6 @@
 name: Docker Image CI
 
-on: [push]
+on: [pull_request]
 
 jobs:
   build:
@@ -8,6 +8,116 @@ jobs:
 
     steps:
     - uses: actions/checkout@v1
+
+    - name: Set env
+      run: echo "::set-env name=ACTION_STATE::yellow"
+
+    - name: debug action_state
+      run: printenv | grep ACTION_STATE
+
+    - name: overwrite ACTION_STATE
+      uses: allenevans/set-env@5a48f138d9ee6a059fc5303298b62528f28e403e
+      with:
+        ACTION_STATE: 'red'
+
+    - name: debug action_state
+      run: printenv | grep ACTION_STATE
+
+    - name: propsfile
+      run: |
+        echo TEST_VAR1=123 > propsfile;
+        echo TEST_VAR2=abc >> propsfile;
+        export $(cat propsfile | xargs);
+        printenv | grep TEST_VAR
+
+    - name: Set SHORT_SHA
+      uses: allenevans/short-sha@252b1691e10c6410d18de72f135cf2adfe39b9fb
+
+    - name: Set SHORT_SHA_2
+      uses: allenevans/short-sha@252b1691e10c6410d18de72f135cf2adfe39b9fb
+      with:
+        sha: ${{ github.event.pull_request.head.sha }}
+        name: SHORT_SHA_2
+
+    - name: Set SHORT_SHA_3
+      uses: allenevans/short-sha@252b1691e10c6410d18de72f135cf2adfe39b9fb
+      with:
+        sha: ${{ github.event.pull_request.head.sha }}
+        name: SHORT_SHA_3
+
+    - name: Set SHORT_SHA_4
+      uses: allenevans/short-sha@252b1691e10c6410d18de72f135cf2adfe39b9fb
+      with:
+        offset: -7
+        name: SHORT_SHA_4
+
+    - name: Set SHORT_SHA_CAPS
+      uses: allenevans/short-sha@252b1691e10c6410d18de72f135cf2adfe39b9fb
+      with:
+        SHA: ${{ github.event.pull_request.head.sha }}
+        NAME: SHORT_SHA_CAPS
+        OFFSET: -24
+        LENGTH: 8
+
+    - name: Print short sha
+      run: |
+        echo "Short sha is {SHA7}"
+
+    - name: Printenv
+      run: |
+        echo "MY_ENV_VAR=${MY_ENV_VAR}"
+        printenv
+
+    - name: github api
+      uses: allenevans/github-api@dist/artifacts-1
+      id: branch
+      with:
+        token: ${{secrets.GH_ACTION_TOKEN}}
+        command: Repository.getBranch
+        repo: allenevans/set-env
+        args: master
+
+    - name: Branch info
+      run: |
+        echo "${{steps.branch.outputs.result}}"
+        echo "branch: ${{steps.branch.outputs.name}}"
+        echo "sha: ${{steps.branch.outputs.commit.sha}}"
+        echo ".."
+
+    - name: get gist
+      uses: allenevans/github-api@dist/artifacts-1
+      id: get_gist
+      with:
+        token: ${{secrets.GH_ACTION_TOKEN}}
+        command: Gist.read
+        id: 6b48964ef7b09214a0953bc3e0d30891
+
+    - name: delete gist
+      uses: allenevans/github-api@dist/artifacts-1
+      id: delete_gist
+      with:
+        token: ${{secrets.GH_ACTION_TOKEN}}
+        command: Gist.delete
+        id: 6b48964ef7b09214a0953bc3e0d30891
+
+    - name: create gist
+      uses: allenevans/github-api@dist/artifacts-1
+      id: create_gist
+      with:
+        token: ${{secrets.GH_ACTION_TOKEN}}
+        command: Gist.create
+        args: |
+          - description: Hello World Examples
+            public: false
+            files:
+              hello_world.js:
+                content: config.log('hello world')
+        select: ".data"
+
+    - name: Dump steps context
+      env:
+        STEPS_CONTEXT: ${{ toJson(steps) }}
+      run: echo "$STEPS_CONTEXT"
 
     - name: Dump GitHub context
       env:
@@ -18,11 +128,6 @@ jobs:
       env:
         JOB_CONTEXT: ${{ toJson(job) }}
       run: echo "$JOB_CONTEXT"
-
-    - name: Dump steps context
-      env:
-        STEPS_CONTEXT: ${{ toJson(steps) }}
-      run: echo "$STEPS_CONTEXT"
 
     - name: Dump runner context
       env:
